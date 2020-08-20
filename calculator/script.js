@@ -19,7 +19,7 @@ for(x of buttonArray)
         }
         else if(btn=='%')
         {
-            btn='*0.001';
+            btn='*0.01';
             s=s+btn;
             display.value=s;
         }
