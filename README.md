@@ -1,1 +1,1 @@
-The calculator app can be viewed here: aurokumarsahu.github.io/calci/calculator
+The calculator app can be viewed here https://aurokumarsahu.github.io/calci/calculator
