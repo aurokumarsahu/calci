@@ -1,0 +1,214 @@
+x = 0
+y = 0
+z = 0
+a = 0
+b = 0
+c = 0
+c1=0
+c2=0
+d = 0
+e = 0
+f = 0
+h = '₹'
+i = 0
+j = 0
+k = 0
+l = 0
+m = 0
+n = 0
+o = 0
+p = 0
+q = 0
+r = 0
+s = 0
+t = 0
+u = 0
+v = 0
+w = 0
+for mainItem in Quote.MainItems:
+	if Product.PartNumber.startswith("PIPE") and mainItem.PartNumber.startswith("PIPE"):
+		pw = Product.Attr('Weight Conversion').GetValue();
+		c=0
+		c1=0
+		c2=0
+		mi=mainItem.PartNumber
+		if not mainItem.ParentItemGuid:
+			for condition in mainItem.VCItemPricingPayload.Conditions:
+				if condition.ConditionType == 'JOCG':                   #checks for the certain condition type (In this case: List price)
+					x = condition.ConditionValue                     #sumarizing values of condition type PR00
+					d = condition.ConditionRate
+				elif condition.ConditionType == 'JOSG':
+					y = condition.ConditionValue
+					e = condition.ConditionRate
+				elif condition.ConditionType == 'JOIG':
+					n = condition.ConditionValue
+					o = condition.ConditionRate
+				elif condition.ConditionType == 'ZNSR':
+					z = condition.ConditionRate
+				elif condition.ConditionType == 'ZTRA':
+					a = condition.ConditionValue
+				elif condition.ConditionType == 'ZK05':
+					b = condition.ConditionValue
+				elif condition.ConditionType == 'ZPR0':
+					c1 = condition.ConditionValue
+					f = condition.ConditionBase
+				elif condition.ConditionType == 'ZPR3':
+					c2 = condition.ConditionValue
+					f = condition.ConditionBase
+				elif condition.ConditionType == 'PR00':
+					if mi.startswith('PIPE'):
+						c = float(condition.ConditionRate)* float(pw)
+						f = condition.ConditionBase
+					else:
+						c= condition.ConditionValue
+						f=condition.ConditionBase
+				elif condition.ConditionType == 'ZDIX':
+					p = condition.ConditionValue
+				elif condition.ConditionType == 'ZGRX':
+					q = condition.ConditionValue               
+				elif condition.ConditionType == 'ZMAX':
+					r = condition.ConditionValue           
+				elif condition.ConditionType == 'ZPRX':
+					s = condition.ConditionValue               
+				elif condition.ConditionType == 'ZTEX':
+					t = condition.ConditionValue               
+				elif condition.ConditionType == 'ZTPI':
+					u = condition.ConditionValue               
+				elif condition.ConditionType == 'ZZRX':
+					v = condition.ConditionValue               
+				elif condition.ConditionType == 'ZCLR':
+					w = condition.ConditionValue               
+		mainItem["CentralGSTPercent"].Value = d
+		mainItem["StateGSTPercent"].Value = e
+		mainItem["IGST_Pct"].Value = o
+		mainItem["IGST_Value"].Value = mainItem["Base_Price"].Value * (float(str(o))/100)
+		mainItem["NSR"].Value = float(z) * float(mainItem.Quantity)
+
+   
+		mainItem["DimensionExtra"].Value = p
+		mainItem["GradeExtra"].Value = q
+		mainItem["MarketExtra"].Value = r
+		mainItem["ProcessExtra"].Value = s
+		mainItem["TestExtra"].Value = t
+		mainItem["TPIExtra"].Value = u
+		mainItem["ZincExtra"].Value = v
+		mainItem["ColorExtra"].Value = w
+		mainItem["PricePerTon"].Value=float(c) + float(c1)
+		mainItem["Base_Price"].Value= float(str(c))+float(str(c1))+(mainItem["DiscountOrSurcharge"].Value * float(str(f)))+ float(str(p)) + float(str(q)) + float(str(r)) + float(str(s)) + float(str(t)) + float(str(u)) + float(str(v))+ float(str(w))
+		mainItem["Central_GST"].Value = mainItem["Base_Price"].Value * (float(str(d))/100)
+		mainItem["State_GST"].Value = mainItem["Base_Price"].Value *(float(str(e))/100)
+		mainItem["Total_GST"].Value = mainItem["State_GST"].Value + mainItem["Central_GST"].Value +mainItem["IGST_Value"].Value
+		mainItem["Total"].Value =mainItem["Base_Price"].Value
+
+
+		if mainItem["DiscountOrSurcharge"].Value < 0:
+			Trace.Write("Its working")
+			b= mainItem.Quantity
+			mainItem["Totalwodiscount"].Value = float(str(c)) +float(str(p)) + float(str(q)) + float(str(r)) + float(str(s)) + float(str(t)) + float(str(u)) + float(str(v))+ float(str(w))
+			g = 0
+			g = (mainItem["DiscountOrSurcharge"].Value * float(b) + g)
+			m = (mainItem["DiscountOrSurcharge"].Value * float(b) + m)
+			i = str(float(((mainItem["Totalwodiscount"].Value - mainItem["Total"].Value)/mainItem["Totalwodiscount"].Value) * 100))
+			j = mainItem["Totalwodiscount"].Value +j
+			k = mainItem["Total"].Value + k
+			l = float(round(((j-k)/j)*100,2))
+			mainItem["Discount_Percent"].Value = float(str(i))
+
+		if mainItem["DiscountOrSurcharge"].Value >= 0:
+			mainItem["Discount_Percent"].Value = 0
+
+	elif not(mainItem.PartNumber.startswith("PIPE")):
+		c=0
+		c1=0
+		c2=0
+		mi=mainItem.PartNumber
+		if not mainItem.ParentItemGuid:
+			for condition in mainItem.VCItemPricingPayload.Conditions:
+				if condition.ConditionType == 'JOCG':                   #checks for the certain condition type (In this case: List price)
+					x = condition.ConditionValue                     #sumarizing values of condition type PR00
+					d = condition.ConditionRate
+				elif condition.ConditionType == 'JOSG':
+					y = condition.ConditionValue
+					e = condition.ConditionRate
+				elif condition.ConditionType == 'JOIG':
+					n = condition.ConditionValue
+					o = condition.ConditionRate
+				elif condition.ConditionType == 'ZNSR':
+					z = condition.ConditionRate
+				elif condition.ConditionType == 'ZTRA':
+					a = condition.ConditionValue
+				elif condition.ConditionType == 'ZK05':
+					b = condition.ConditionValue
+				elif condition.ConditionType == 'ZPR0':
+					c1 = condition.ConditionValue
+					f = condition.ConditionBase
+				elif condition.ConditionType == 'ZPR3':
+					c2 = condition.ConditionValue
+					f = condition.ConditionBase
+				elif condition.ConditionType == 'PR00':
+					if mi.startswith('PIPE'):
+						c = float(condition.ConditionRate)
+						f = condition.ConditionBase
+					else:
+						c= condition.ConditionValue
+						f=condition.ConditionBase
+				elif condition.ConditionType == 'ZDIX':
+					p = condition.ConditionValue
+				elif condition.ConditionType == 'ZGRX':
+					q = condition.ConditionValue               
+				elif condition.ConditionType == 'ZMAX':
+					r = condition.ConditionValue           
+				elif condition.ConditionType == 'ZPRX':
+					s = condition.ConditionValue               
+				elif condition.ConditionType == 'ZTEX':
+					t = condition.ConditionValue               
+				elif condition.ConditionType == 'ZTPI':
+					u = condition.ConditionValue               
+				elif condition.ConditionType == 'ZZRX':
+					v = condition.ConditionValue               
+				elif condition.ConditionType == 'ZCLR':
+					w = condition.ConditionValue               
+		mainItem["CentralGSTPercent"].Value = d
+		mainItem["StateGSTPercent"].Value = e
+		mainItem["IGST_Pct"].Value = o
+		mainItem["IGST_Value"].Value = mainItem["Base_Price"].Value * (float(str(o))/100)
+		mainItem["NSR"].Value = float(z) * float(mainItem.Quantity)
+
+   
+		mainItem["DimensionExtra"].Value = p
+		mainItem["GradeExtra"].Value = q
+		mainItem["MarketExtra"].Value = r
+		mainItem["ProcessExtra"].Value = s
+		mainItem["TestExtra"].Value = t
+		mainItem["TPIExtra"].Value = u
+		mainItem["ZincExtra"].Value = v
+		mainItem["ColorExtra"].Value = w
+		mainItem["PricePerTon"].Value=float(c) + float(c1)
+		mainItem["Base_Price"].Value= float(str(c))+float(str(c1))+(mainItem["DiscountOrSurcharge"].Value * float(str(f)))+ float(str(p)) + float(str(q)) + float(str(r)) + float(str(s)) + float(str(t)) + float(str(u)) + float(str(v))+ float(str(w))
+		mainItem["Central_GST"].Value = mainItem["Base_Price"].Value * (float(str(d))/100)
+		mainItem["State_GST"].Value = mainItem["Base_Price"].Value *(float(str(e))/100)
+		mainItem["Total_GST"].Value = mainItem["State_GST"].Value + mainItem["Central_GST"].Value +mainItem["IGST_Value"].Value
+		mainItem["Total"].Value =mainItem["Base_Price"].Value
+
+
+		if mainItem["DiscountOrSurcharge"].Value < 0:
+			Trace.Write("Its working")
+			b= mainItem.Quantity
+			mainItem["Totalwodiscount"].Value = float(str(c)) +float(str(p)) + float(str(q)) + float(str(r)) + float(str(s)) + float(str(t)) + float(str(u)) + float(str(v))+ float(str(w))
+			g = 0
+			g = (mainItem["DiscountOrSurcharge"].Value * float(b) + g)
+			m = (mainItem["DiscountOrSurcharge"].Value * float(b) + m)
+			i = str(float(((mainItem["Totalwodiscount"].Value - mainItem["Total"].Value)/mainItem["Totalwodiscount"].Value) * 100))
+			j = mainItem["Totalwodiscount"].Value +j
+			k = mainItem["Total"].Value + k
+			l = float(round(((j-k)/j)*100,2))
+			mainItem["Discount_Percent"].Value = float(str(i))
+
+		if mainItem["DiscountOrSurcharge"].Value >= 0:
+			mainItem["Discount_Percent"].Value = 0
+			
+Quote.CustomFields.AssignValue('Total Discount%', str(float(l)))
+Quote.CustomFields.AssignValue('Total Discount', h +str(float(m) * (-1)))
+
+
+Quote.Save()
